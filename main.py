@@ -17,7 +17,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 with open("BMW PARTS_2_SD_147949.csv", "r") as f:
     reader = csv.reader(f, delimiter=';')
 
-    """with open("new.csv", "w") as f:
+    with open("new.csv", "w") as f:
         header = [
             "МАРКА",
             "МОДЕЛЬ",
@@ -41,6 +41,6 @@ with open("BMW PARTS_2_SD_147949.csv", "r") as f:
         ]
         writer = csv.DictWriter(f, fieldnames=header)
 
-        writer.writeheader()"""
-    for line in reader:
-            print(line[0])
+        writer.writeheader()
+        for line in reader:
+            print(line)
