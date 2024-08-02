@@ -6,6 +6,10 @@ import csv
 summa = 1
 name_csv = 1
 
+def fix_nulls(s):
+    for line in s:
+        yield line.replace('\0', '')
+
 def create_file_csv(name_csv):
     if os.path.exists(f"{name_csv}.csv"):
         print("файл csv уже есть")
@@ -52,7 +56,7 @@ for namefile in files:
     if "-" in namefile:
         provider = ""
         print("KARO")
-        text = namefile[namefile.find("by-"): namefile.find(".csv")]
+        text = namefile[namefile.find("by-") +3 : namefile.find(".csv")]
         print(text)
         book= load_workbook("Таблица поставщиков.xlsx")
         sheet = book["Лист1"]
@@ -60,7 +64,7 @@ for namefile in files:
         for i in range(2, 2000):
             
             PB_provider = str(sheet["E"+ str(i)].value)
-            if text == PB_provider:
+            if text in PB_provider:
                 provider = str(sheet["B"+ str(i)].value)
                 pricing = str(sheet["C"+ str(i)].value)
                 control = 1
@@ -72,7 +76,7 @@ for namefile in files:
         
         print(pricing, provider)
         with open(f'files_csv/{namefile}', 'r', encoding="utf-8") as csvfile:
-            csvreader = csv.reader(csvfile)
+            csvreader = csv.reader(fix_nulls(csvfile))
             n = 1
             p = 1
             
@@ -163,7 +167,7 @@ for namefile in files:
             
         print(pricing, provider)
         with open(f'files_csv/{namefile}', 'r', encoding="utf-8") as csvfile:
-            csvreader = csv.reader(csvfile)
+            csvreader = csv.reader(fix_nulls(csvfile))
             n = 1
             p = 1
             for row in csvreader:
