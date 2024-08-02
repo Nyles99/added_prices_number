@@ -237,7 +237,7 @@ for namefile in files:
                 else:
                     p += 1
 
-print("Всего обработано {summa_file} файлов")
+print(f"Всего обработано {summa_file} файлов")
 
 input("Нажми любую кнопку, чтобы закончить")
     
