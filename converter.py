@@ -48,8 +48,10 @@ for i in range(2, 2000):
     providers = str(sheet2["B"+ str(i)].value)
     spisok_providers.append(providers)"""
 # Получаем список файлов
+summa_file = 0
 files = os.listdir(directory)
-for namefile in files: 
+for namefile in files:
+    summa_file += 1 
 # Выводим список файлов
     print(namefile)
     control = 0
@@ -234,5 +236,9 @@ for namefile in files:
                     
                 else:
                     p += 1
+
+print("Всего обработано {summa_file} файлов")
+
+input("Нажми любую кнопку, чтобы закончить")
     
         
