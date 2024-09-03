@@ -1,8 +1,40 @@
 from openpyxl import load_workbook
 import os
 import csv
+import requests
+from bs4 import BeautifulSoup
 
 
+headers = {
+    "Accept" : "application/json, text/javascript, */*; q=0.01",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
+}
+
+usd_href = "https://www.google.com/search?q=+%D0%BA%D1%83%D1%80%D1%81+%D0%B4%D0%BE%D0%BB%D0%BB%D0%B0%D1%80%D0%B0&sca_esv=c423d0ff467f72f0&rlz=1C1GCEU_ruRU1112RU1112&sxsrf=ADLYWILLCHXpkziu5DBx2y6869BYtDqAFw%3A1725359298100&ei=wuTWZuPcBYy4wPAPlp_JyAo&ved=0ahUKEwjjxcqgyKaIAxUMHBAIHZZPEqkQ4dUDCA8&oq=+%D0%BA%D1%83%D1%80%D1%81+%D0%B4%D0%BE%D0%BB%D0%BB%D0%B0%D1%80%D0%B0&gs_lp=Egxnd3Mtd2l6LXNlcnAiGCDQutGD0YDRgSDQtNC-0LvQu9Cw0YDQsDILEAAYgAQYsQMYgwEyCxAAGIAEGLEDGIMBMgsQABiABBixAxiDATILEAAYgAQYsQMYgwEyBRAAGIAEMggQABiABBixAzILEAAYgAQYsQMYgwEyBRAAGIAEMgsQLhiABBjHARivATIFEAAYgARIgAdQAFgAcAB4AZABAJgBNKABNKoBATG4AQzIAQD4AQGYAgGgAj2YAwCSBwExoAeYCg&sclient=gws-wiz-serp"
+byn_href = "https://www.google.com/search?q=%D0%BA%D1%83%D1%80%D1%81+byn+%D0%BA+%D0%B4%D0%BE%D0%BB%D0%BB%D0%B0%D1%80%D1%83&sca_esv=c423d0ff467f72f0&rlz=1C1GCEU_ruRU1112RU1112&sxsrf=ADLYWIKYnhUabzGxH3ft6dCse13GYSBR8A%3A1725361030091&ei=huvWZtimBfe8wPAPreTzmQw&ved=0ahUKEwjYgbvazqaIAxV3HhAIHS3yPMMQ4dUDCA8&uact=5&oq=%D0%BA%D1%83%D1%80%D1%81+byn+%D0%BA+%D0%B4%D0%BE%D0%BB%D0%BB%D0%B0%D1%80%D1%83&gs_lp=Egxnd3Mtd2l6LXNlcnAiHtC60YPRgNGBIGJ5biDQuiDQtNC-0LvQu9Cw0YDRgzIKEAAYgAQYRhiCAjIIEAAYgAQYogQyCBAAGKIEGIkFMggQABiABBiiBDIIEAAYgAQYogQyFhAAGIAEGEYYggIYlwUYjAUY3QTYAQFI8BpQ-A9Y0hZwAngBkAEAmAFPoAGmA6oBATe4AQPIAQD4AQGYAgmgAtoDwgIKEAAYsAMY1gQYR8ICDRAAGIAEGLADGEMYigXCAgUQABiABJgDAIgGAZAGCroGBggBEAEYE5IHATmgB90i&sclient=gws-wiz-serp"
+uero_href = "https://www.google.com/search?q=%D0%BA%D1%83%D1%80%D1%81+eur+usd&sca_esv=c423d0ff467f72f0&rlz=1C1GCEU_ruRU1112RU1112&sxsrf=ADLYWIKYnhUabzGxH3ft6dCse13GYSBR8A%3A1725361030091&ei=huvWZtimBfe8wPAPreTzmQw&oq=%D0%BA%D1%83%D1%80%D1%81+uer&gs_lp=Egxnd3Mtd2l6LXNlcnAiDNC60YPRgNGBIHVlcioCCAAyCRAAGIAEGAoYKjIHEAAYgAQYCjIHEAAYgAQYCjIHEAAYgAQYCjIHEAAYgAQYCjIHEAAYgAQYCjIHEAAYgAQYCjIHEAAYgAQYCjIHEAAYgAQYCjIHEAAYgAQYCkjMNFDGI1i9KHADeACQAQCYAUSgAfoBqgEBNLgBAcgBAPgBAZgCBqAC3QHCAgoQABiwAxjWBBhHwgINEAAYgAQYsAMYQxiKBcICCBAAGIAEGLEDwgIKEAAYgAQYFBiHAsICCxAAGIAEGLEDGIMBwgIFEAAYgATCAhEQABiABBixAxgKGCoYRhiCAsICDRAAGIAEGLEDGIMBGArCAh0QABiABBixAxgKGCoYRhiCAhiXBRiMBRjdBNgBAZgDAIgGAZAGCroGBggBEAEYE5IHATagB5wh&sclient=gws-wiz-serp"
+req = requests.get(url=usd_href, headers=headers)
+src = req.text
+soup_1 = BeautifulSoup(src, 'html.parser')
+href_part = str(soup_1.find_all("div", class_="b1hJbf"))
+usd_rub = float(href_part[href_part.find("data-exchange-rate=")+20 : href_part.find("data-exchange-rate=")+26])
+#data-exchange-rate="88.75118">
+print(usd_rub, 'Курс доллара к рублю')
+req = requests.get(url=byn_href, headers=headers)
+src = req.text
+soup_1 = BeautifulSoup(src, 'html.parser')
+href_part = str(soup_1.find_all("div", class_="b1hJbf"))
+usd_byn = float(href_part[href_part.find("data-exchange-rate=")+20 : href_part.find("data-exchange-rate=")+26])
+#data-exchange-rate="88.75118">
+print(usd_byn, 'Курс доллара к белкам')
+req = requests.get(url=uero_href, headers=headers)
+src = req.text
+soup_1 = BeautifulSoup(src, 'html.parser')
+href_part = str(soup_1.find_all("div", class_="b1hJbf"))
+usd_uero = float(href_part[href_part.find("data-exchange-rate=")+20 : href_part.find("data-exchange-rate=")+26])
+#data-exchange-rate="88.75118">
+print(usd_uero, 'Курс доллара к евро')
+a = input("Нажми любую кнопку, чтобы закончить")
 summa = 1
 name_csv = 1
 
@@ -35,7 +67,9 @@ def create_file_csv(name_csv):
                     'Состояние',
                     'Скидка',
                     'Валюта',
-                    'Удаляем дубли'
+                    'Удаляем дубли',
+                    'Цена в долларах',
+                    'Цена со скидкой'
                 )
             )
 create_file_csv(name_csv)
@@ -106,6 +140,21 @@ for namefile in files:
                         foto = stroka[17].replace('"',"").replace("'","")
                         sale = stroka[14].replace('"',"").replace("'","")
                         status = stroka[19].replace('"',"").replace("'","")
+                        if val == 'BYN':
+                            usd = int(price) * usd_byn
+                        elif val == 'RUR':
+                            usd = float(int(price) / usd_rub)
+                        elif val == 'USD':
+                            usd = price
+                        elif val == 'EUR':
+                            usd = float(int(price) / usd_uero)
+                        else:
+                            usd = 'Неизвестная валюта'
+                        usd_sale = usd
+                        if int(sale) > 0:
+                            usd_sale = (float(price)/100) * (100-int(sale))
+                        else:
+                            usd_sale = usd    
                         if status == "1":
                             status = "Новая"
                         else:
@@ -132,7 +181,9 @@ for namefile in files:
                                 status,
                                 sale,
                                 val,
-                                'Удаляем дубли'
+                                'Удаляем дубли',
+                                usd,
+                                usd_sale
                             )
                         )
                         file.close()
